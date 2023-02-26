@@ -64,6 +64,7 @@ function custom_woocommerce_access_menu()
 
 /**
  * @return void
+ * @todo: add an option for not logged in users
  */
 /**
  * @return void
