@@ -16,14 +16,8 @@
 // Restrict purchasing for non-customer users
 function restrict_purchase_access()
 {
-    if (!is_user_logged_in()) {
-        return;
-    }
-
     $user = wp_get_current_user();
-
     $selected_roles = get_option('custom_woocommerce_access_role', array('customer'));
-
     $has_access = false;
 
     foreach ($selected_roles as $role) {
@@ -82,19 +76,28 @@ function custom_woocommerce_access_settings_page()
 
     $selected_roles = get_option('custom_woocommerce_access_role', array('customer'));
 
+    if (!is_array($selected_roles)) {
+        $selected_roles = array($selected_roles);
+    }
+
     echo '<div class="wrap">';
     echo '<h2>Custom WooCommerce Access Settings</h2>';
     echo '<form method="post" action="options.php">';
     settings_fields('custom_woocommerce_access_settings');
     do_settings_sections('custom-woocommerce-access');
-    echo '<label for="custom_woocommerce_access_role">Select User Role(s) to grant access:</label><br />';
-    echo '<select id="custom_woocommerce_access_role" name="custom_woocommerce_access_role[]" multiple="multiple" size="5" style="min-height: 400px; min-width: 200px;">';
+    echo '<label>Select User Role(s) to grant access:</label><br />';
+
     $all_roles = wp_roles()->roles;
+
     foreach ($all_roles as $role_name => $role_info) {
-        $selected = in_array($role_name, $selected_roles) ? 'selected="selected"' : '';
-        echo '<option value="' . esc_attr($role_name) . '" ' . $selected . '>' . esc_html($role_info['name']) . '</option>';
+        $checked = in_array($role_name, $selected_roles) ? 'checked="checked"' : '';
+        echo '<label>';
+        echo '<input type="checkbox" name="custom_woocommerce_access_role[]" value="' . esc_attr($role_name) . '" ' . $checked . '>';
+        echo esc_html($role_info['name']);
+        echo '</label><br />';
     }
-    echo '</select><br /><br />';
+
     submit_button();
     echo '</form></div>';
 }
+
