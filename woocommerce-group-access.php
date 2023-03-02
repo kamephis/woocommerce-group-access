@@ -12,8 +12,11 @@
  * Domain Path: /languages
  */
 
-
-// Restrict purchasing for non-customer users
+/**
+ * Restrict purchasing for non-customer users
+ *
+ * @return void
+ */
 function restrict_purchase_access()
 {
     $user = wp_get_current_user();
